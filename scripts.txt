@@ -1,2 +1,9 @@
-test real-scene captured images: (dump from ISP HW pipeline, before DMSC)
-python test.py test_data/raw_in_baseP5 test_data/out_baseP5_12bit_L1 --height 1080 --width 1920 --in_bitwidth 12 --out_bitwidth 12 --bayer_pattern 1 --model pretrained_model/params_e123.pth --level 1
+test real-scene captured images (dump from ISP HW pipeline, before DMSC): 
+python test.py --input_dir test_data/raw_in_AIDNR --output_dir test_data/out_AIDNR_12bit_L1_margin16 --height 1080 --width 1920 --in_bitwidth 12 --out_bitwidth 12 --bayer_pattern 1 --model pretrained_model/params_e123.pth --level 1 --margin 16
+
+---------------------------------------------------------------------------------------------------------
+export onnx:
+python --model export_onnx.py pretrained_model/params_e123.pth --height 256 --width 256 --dtype fp16
+
+tile infer using onnx:
+python tile_infer.py --input_dir test_data/raw_in_AIDNR --output_dir test_data/out_AIDNR_12bit_L1_margin16_onnx_fp16 --onnx pretrained_model/params_e123_fp16_256x256_L1.onnx   --height 1080 --width 1920 --in_bitwidth 12 --out_bitwidth 12 --bayer_pattern 1 --margin 16 --dtype fp16
