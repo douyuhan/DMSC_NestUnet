@@ -1,7 +1,6 @@
 import torch.nn as nn
 import torch
 from config import Config
-from torchsummary import summary
 import torch.nn.functional as F
 
 CONFIG = Config()
@@ -74,5 +73,6 @@ class RRDBNet_SENet(nn.Module):
 
 if __name__ == "__main__":
 
+    from torchsummary import summary
     NET = RRDBNet_SENet().to(device)
     summary(NET, (4, 128, 128), device = 'cuda')

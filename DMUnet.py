@@ -1,6 +1,5 @@
 import torch
 import torch.nn as nn
-from torchsummary import summary
 from models import RRDBNet_SENet
 from utils import get_GaussKernel_2
 from config import Config

@@ -80,7 +80,7 @@ def calc_psnr(img1, img2, ignore=0, cpsnr=False):
         return psnr.cpu()
 
 
-def rgb2RGGB(img):
+def rgb2RGGB(img):   # actual convert to GBRG
 
     r = img[:, 0, 1::2, 0::2].unsqueeze(1)
     g1 = img[:, 1, 0::2, 0::2].unsqueeze(1)

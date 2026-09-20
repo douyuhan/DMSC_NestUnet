@@ -1,0 +1,2 @@
+test real-scene captured images: (dump from ISP HW pipeline, before DMSC)
+python test.py test_data/raw_in_baseP5 test_data/out_baseP5_12bit_L1 --height 1080 --width 1920 --in_bitwidth 12 --out_bitwidth 12 --bayer_pattern 1 --model pretrained_model/params_e123.pth --level 1
