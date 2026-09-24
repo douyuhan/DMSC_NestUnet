@@ -1,5 +1,6 @@
 ### A short demo code for research on Bayer pattern image demosaicking 
 ### (paper "A Compact High-Quality Image Demosaicking Neural Net-work for Edge Computing Devices" being previewed by MDPI)
+### original git project: https://github.com/vonJJ/DemosaickingNestUnet
 
 
 - Usage:
