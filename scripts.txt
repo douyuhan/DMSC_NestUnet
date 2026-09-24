@@ -3,7 +3,7 @@ python test.py --input_dir test_data/raw_in_AIDNR --output_dir test_data/out_AID
 
 ---------------------------------------------------------------------------------------------------------
 export onnx:
-python --model export_onnx.py pretrained_model/params_e123.pth --height 256 --width 256 --dtype fp16
+python export_onnx.py --model pretrained_model/params_e123.pth --height 256 --width 256 --dtype fp16
 
 tile infer using onnx:
 python tile_infer.py --input_dir test_data/raw_in_AIDNR --output_dir test_data/out_AIDNR_12bit_L1_margin16_onnx_fp16 --onnx pretrained_model/params_e123_fp16_256x256_L1.onnx   --height 1080 --width 1920 --in_bitwidth 12 --out_bitwidth 12 --bayer_pattern 1 --margin 16 --dtype fp16
