@@ -49,6 +49,20 @@
     - `margin=16` was verified (with the real pretrained checkpoint) to be enough to fully absorb this network's receptive field (empirically ~30 raw pixels) — both at internal tile-to-tile seams and at the image's true outer edge, matching a single-shot `test.py` run to float32 rounding precision.
 
 
+- Compute cost (TOPS) at 1920x1080 @ 30fps
+    - The network's internal processing resolution is **960x540** (half of 1920x1080 in each dimension), because `utils.rgb2RGGB` packs every 2x2 Bayer block into one 4-channel `[R,G1,G2,B]` position before it ever reaches the network.
+    - Unlike a typical downsampling UNet, `DMUnet.py`'s "downsampling" between nested levels is a fixed **stride=1** depthwise Gaussian blur (`utils.get_GaussKernel_2`) — there is no real spatial pyramid, so every level (`x_00` … `x_40`) processes the full 960x540 resolution; only the channel width grows (8→16→32→64→128). Compute therefore roughly **quadruples per additional nested level** instead of the ~4x-cheaper scaling a real downsampling pyramid would give.
+    - Measured with `thop` against the real pretrained checkpoint (1 MAC = 2 ops convention):
+
+      | Level | MACs/frame | GFLOPs/frame | Params | @30fps |
+      |---|---|---|---|---|
+      | L1 | 6.12 G | 12.23 G | 11.75 K | **≈ 0.37 TOPS** |
+      | L2 | 23.92 G | 47.84 G | 46.23 K | **≈ 1.44 TOPS** |
+      | L3 | 93.94 G | 187.89 G | 183.01 K | **≈ 5.64 TOPS** |
+      | L4 | 357.92 G | 715.83 G | 698.59 K | ≈ 21.48 TOPS (reference only — the pretrained checkpoint's L4-only weights were never trained, see the pruning-depth note above) |
+
+    - Takeaway for edge deployment: pick the pruning depth (`--level` in `test.py`/`config.DMUnetL`) to match the target accelerator's real TOPS budget — e.g. a ~1-2 TOPS edge NPU is a much more realistic match for L2 than for L3.
+
 - Dataset:
     - We have two prepared demo datesets Kodak24 and McMaster
     - For Training, you should prepare on your own
